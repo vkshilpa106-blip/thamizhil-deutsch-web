@@ -210,6 +210,8 @@ const DATA = {"A1.1": {"label": "Beginner Basics", "topics": {"greetings": {"lab
 
 const LEVEL_ORDER = ["A1.1","A1.2","A2.1","A2.2","B1.1","B1.2","B2.1","B2.2"];
 
+const READING_DATA = {"A1.1": [{"title": "Meine Familie", "text": "Hallo! Ich heiße Priya. Ich komme aus Chennai. Meine Familie ist groß. Ich habe eine Mutter, einen Vater und einen Bruder. Meine Mutter kocht sehr gut. Mein Vater arbeitet in einem Büro. Mein Bruder spielt Fußball. Wir wohnen in Berlin.", "questions": [{"q": "Woher kommt Priya?", "options": ["Chennai", "Berlin", "Hamburg"], "correct": "Chennai"}, {"q": "Was macht die Mutter?", "options": ["Sie kocht.", "Sie arbeitet im Büro.", "Sie spielt Fußball."], "correct": "Sie kocht."}, {"q": "Wo wohnt die Familie?", "options": ["Chennai", "Hamburg", "Berlin"], "correct": "Berlin"}]}, {"title": "Mein Tag", "text": "Ich stehe um sieben Uhr auf. Zuerst trinke ich Tee. Dann gehe ich zur Arbeit. Um zwölf Uhr esse ich Mittagessen. Am Abend koche ich zu Hause. Um zehn Uhr gehe ich ins Bett.", "questions": [{"q": "Wann steht die Person auf?", "options": ["Sieben Uhr", "Acht Uhr", "Neun Uhr"], "correct": "Sieben Uhr"}, {"q": "Was trinkt die Person zuerst?", "options": ["Kaffee", "Tee", "Wasser"], "correct": "Tee"}, {"q": "Wann isst die Person Mittagessen?", "options": ["Zehn Uhr", "Zwölf Uhr", "Zwei Uhr"], "correct": "Zwölf Uhr"}]}], "A2.1": [{"title": "Einkaufen im Supermarkt", "text": "Am Samstag gehe ich einkaufen. Ich brauche Brot, Milch und Obst. Der Supermarkt ist nicht weit von meiner Wohnung. Ich bezahle mit Karte, weil ich wenig Bargeld habe. Die Preise sind heute günstig, weil es ein Sonderangebot gibt.", "questions": [{"q": "Wann geht die Person einkaufen?", "options": ["Samstag", "Sonntag", "Montag"], "correct": "Samstag"}, {"q": "Wie bezahlt die Person?", "options": ["Bargeld", "Mit Karte", "Mit Scheck"], "correct": "Mit Karte"}, {"q": "Warum sind die Preise günstig?", "options": ["Es gibt ein Sonderangebot.", "Es ist Weihnachten.", "Der Supermarkt schließt."], "correct": "Es gibt ein Sonderangebot."}]}, {"title": "Die neue Wohnung", "text": "Wir sind letzte Woche umgezogen. Die neue Wohnung hat zwei Zimmer, eine Küche und ein Badezimmer. Die Miete ist höher als vorher, aber die Wohnung ist heller. Unser Nachbar ist sehr freundlich und hat uns schon geholfen.", "questions": [{"q": "Wann sind sie umgezogen?", "options": ["Letzte Woche", "Letzten Monat", "Gestern"], "correct": "Letzte Woche"}, {"q": "Wie ist die Miete jetzt?", "options": ["Niedriger", "Höher", "Gleich"], "correct": "Höher"}, {"q": "Wie ist der Nachbar?", "options": ["Unfreundlich", "Freundlich", "Laut"], "correct": "Freundlich"}]}]};
+
 /* words used in the hero split-flap cycler */
 const FEATURED = [
   {de:"Hallo", ta:"வணக்கம்", en:"hello"},
@@ -220,7 +222,26 @@ const FEATURED = [
 ];
 
 /* ============ STATE ============ */
-let state = { screen:"landing", level:null, topicKey:null, qIndex:0, score:0, options:[], locked:false, streak:0 };
+let state = { screen:"landing", level:null, mode:null, topicKey:null, qIndex:0, score:0, options:[], locked:false, streak:0, passageIndex:0, passageStep:"read" };
+
+/* ============ SPEECH (Hören) ============ */
+function speakGerman(text){
+  if(!("speechSynthesis" in window)){
+    alert("Your browser doesn't support built-in speech. Try Chrome or Edge for Hören practice.");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "de-DE";
+  utter.rate = 0.9;
+  const voices = window.speechSynthesis.getVoices();
+  const deVoice = voices.find(v=>v.lang && v.lang.startsWith("de"));
+  if(deVoice) utter.voice = deVoice;
+  window.speechSynthesis.speak(utter);
+}
+if("speechSynthesis" in window){
+  window.speechSynthesis.onvoiceschanged = ()=>{ window.speechSynthesis.getVoices(); };
+}
 
 function totalWords(){
   let n=0;
@@ -254,8 +275,12 @@ function render(){
   const app = document.getElementById("app");
   if(state.screen==="landing") app.innerHTML = renderLanding();
   else if(state.screen==="levels") app.innerHTML = renderLevels();
+  else if(state.screen==="modes") app.innerHTML = renderModes();
   else if(state.screen==="topics") app.innerHTML = renderTopics();
   else if(state.screen==="practice") app.innerHTML = renderPractice();
+  else if(state.screen==="hoerenPractice") app.innerHTML = renderHoerenPractice();
+  else if(state.screen==="passages") app.innerHTML = renderPassages();
+  else if(state.screen==="reading") app.innerHTML = renderReading();
   else if(state.screen==="summary") app.innerHTML = renderSummary();
   attachHandlers();
   if(state.screen==="landing") startFlap();
@@ -334,14 +359,44 @@ function renderLevels(){
   `;
 }
 
-/* ============ TOPICS ============ */
+/* ============ MODE SELECT ============ */
+function renderModes(){
+  const lvl = state.level;
+  const topics = DATA[lvl].topics;
+  const topicCount = Object.keys(topics).length;
+  const wordCount = Object.values(topics).reduce((a,t)=>a+t.items.length,0);
+  const passages = READING_DATA[lvl] || [];
+  const hasSpeech = "speechSynthesis" in window;
+  return `
+  <button class="back-btn" data-nav="levels">← Levels</button>
+  <div class="section-head"><h2>${lvl} — ${DATA[lvl].label}</h2><p>Choose how you want to practice.</p></div>
+  <div class="topic-grid">
+    <button class="topic-card" data-modeselect="vocab">
+      <h3>📚 Vocabulary</h3>
+      <span>${topicCount} topics · ${wordCount} words</span>
+    </button>
+    <button class="topic-card" data-modeselect="hoeren" ${!hasSpeech?"style=\"opacity:.55\"":""}>
+      <h3>🎧 Hören (Listening)</h3>
+      <span>${hasSpeech? "Listen & choose the meaning" : "Needs Chrome/Edge browser"}</span>
+    </button>
+    <button class="topic-card" data-modeselect="lesen" ${passages.length===0?"style=\"opacity:.55\"":""}>
+      <h3>📖 Lesen (Reading)</h3>
+      <span>${passages.length>0? passages.length+" short passages" : "Coming soon for this level"}</span>
+    </button>
+  </div>
+  `;
+}
+
+
 function renderTopics(){
   const lvl = state.level;
   const topics = DATA[lvl].topics;
   const progress = loadProgress();
+  const modeLabel = state.mode==="hoeren" ? " · Hören" : "";
   const cards = Object.keys(topics).map(tk=>{
     const t = topics[tk];
-    const best = progress[lvl] && progress[lvl][tk] ? progress[lvl][tk] : null;
+    const progKey = state.mode==="hoeren" ? "hoeren_"+tk : tk;
+    const best = progress[lvl] && progress[lvl][progKey] ? progress[lvl][progKey] : null;
     return `
     <button class="topic-card" data-topic="${tk}">
       <h3>${t.label.replace(/^Vocabulary: /,"")}</h3>
@@ -349,8 +404,8 @@ function renderTopics(){
     </button>`;
   }).join("");
   return `
-  <button class="back-btn" data-nav="levels">← Levels</button>
-  <div class="section-head"><h2>${lvl} — ${DATA[lvl].label}</h2><p>Choose a topic to practice.</p></div>
+  <button class="back-btn" data-nav="modes">← ${lvl} modes</button>
+  <div class="section-head"><h2>${lvl} — ${DATA[lvl].label}${modeLabel}</h2><p>Choose a topic to practice.</p></div>
   <div class="topic-grid">${cards}</div>
   `;
 }
@@ -398,19 +453,159 @@ function renderPractice(){
   `;
 }
 
-/* ============ SUMMARY ============ */
-function renderSummary(){
+/* ============ HÖREN (LISTENING) PRACTICE ============ */
+function buildHoerenQuestion(){
   const topic = DATA[state.level].topics[state.topicKey];
-  const total = topic.items.length;
+  const items = topic.items;
+  const correct = items[state.qIndex];
+  let pool = items.filter(it=>it.id!==correct.id).slice();
+  pool.sort(()=>Math.random()-0.5);
+  const distractors = pool.slice(0,3);
+  const options = [correct,...distractors].sort(()=>Math.random()-0.5);
+  state.options = options;
+  state.locked = false;
+}
+
+function renderHoerenPractice(){
+  const topic = DATA[state.level].topics[state.topicKey];
+  const items = topic.items;
+  if(state.qIndex===0 && state.options.length===0) buildHoerenQuestion();
+  const current = items[state.qIndex];
+  const pct = Math.round((state.qIndex)/items.length*100);
+  const streak = loadStreak().count;
+
+  const optsHtml = state.options.map(opt=>{
+    return `<button class="opt-btn" data-hoptid="${opt.id}">${opt.ta}</button>`;
+  }).join("");
+
+  return `
+  <button class="back-btn" data-nav="topics">← Exit topic</button>
+  <div class="practice-header">
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="streak-pill">🔥 ${streak}</div>
+  </div>
+  <div id="feedback" class="feedback-banner"></div>
+  <div class="flashcard">
+    <div class="card-tag">${topic.label} · Hören</div>
+    <button class="btn btn-primary" id="speakBtn">🔊 Play word</button>
+    <div class="prompt-line" style="margin-top:22px;">Listen carefully — which meaning matches what you heard?</div>
+  </div>
+  <div class="options-grid">${optsHtml}</div>
+  <div class="next-row" id="nextRow"></div>
+  `;
+}
+
+function handleHoerenAnswer(btnEl){
+  if(state.locked) return;
+  state.locked = true;
+  const topic = DATA[state.level].topics[state.topicKey];
+  const items = topic.items;
+  const current = items[state.qIndex];
+  const chosenId = btnEl.getAttribute("data-hoptid");
+  const isCorrect = chosenId === current.id;
+  const feedback = document.getElementById("feedback");
+
+  document.querySelectorAll("[data-hoptid]").forEach(b=>{
+    b.disabled = true;
+    if(b.getAttribute("data-hoptid")===current.id) b.classList.add("correct");
+    if(b===btnEl && !isCorrect) b.classList.add("wrong");
+  });
+
+  if(isCorrect){
+    state.score++;
+    bumpStreak();
+    feedback.textContent = "🟩 Correct-u! Super da";
+    feedback.className = "feedback-banner correct show";
+    burstConfetti();
+  }else{
+    feedback.textContent = `🟥 Wrong-u. That was: ${current.de} (${current.ta})`;
+    feedback.className = "feedback-banner wrong show";
+  }
+
+  const nextRow = document.getElementById("nextRow");
+  const isLast = state.qIndex >= items.length-1;
+  nextRow.innerHTML = `<button class="btn btn-primary" id="nextBtn">${isLast? "See results →" : "Next word →"}</button>`;
+  document.getElementById("nextBtn").onclick = ()=>{
+    if(isLast){ state.screen="summary"; }
+    else{ state.qIndex++; state.options=[]; buildHoerenQuestion(); state.screen="hoerenPractice"; }
+    render();
+  };
+}
+
+/* ============ LESEN (READING) ============ */
+function renderPassages(){
+  const lvl = state.level;
+  const passages = READING_DATA[lvl] || [];
+  const progress = loadProgress();
+  const cards = passages.map((p,i)=>{
+    const best = progress[lvl] && progress[lvl]["lesen_"+i] ? progress[lvl]["lesen_"+i] : null;
+    return `
+    <button class="topic-card" data-passage="${i}">
+      <h3>📖 ${p.title}</h3>
+      <span>${p.questions.length} questions${best? " · best "+best+"%":""}</span>
+    </button>`;
+  }).join("");
+  return `
+  <button class="back-btn" data-nav="modes">← ${lvl} modes</button>
+  <div class="section-head"><h2>${lvl} — Lesen</h2><p>Pick a short passage to read.</p></div>
+  <div class="topic-grid">${cards}</div>
+  `;
+}
+
+function renderReading(){
+  const p = READING_DATA[state.level][state.passageIndex];
+  if(state.passageStep==="read"){
+    return `
+    <button class="back-btn" data-nav="passages">← Passages</button>
+    <div class="flashcard" style="text-align:left;">
+      <div class="card-tag" style="text-align:center;">${p.title}</div>
+      <p style="font-size:1.15rem;line-height:1.8;color:var(--ink);">${p.text}</p>
+      <div style="text-align:center;margin-top:14px;">
+        <button class="btn btn-ghost" id="speakPassageBtn">🔊 Listen to passage</button>
+      </div>
+    </div>
+    <div class="next-row"><button class="btn btn-primary" id="readingContinueBtn">Answer questions →</button></div>
+    `;
+  }
+  // questions step
+  const q = p.questions[state.qIndex];
+  const pct = Math.round((state.qIndex)/p.questions.length*100);
+  const optsHtml = q.options.map(opt=>`<button class="opt-btn" data-ropt="${opt.replace(/"/g,'&quot;')}">${opt}</button>`).join("");
+  return `
+  <button class="back-btn" data-nav="passages">← Passages</button>
+  <div class="practice-header">
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+  </div>
+  <div id="feedback" class="feedback-banner"></div>
+  <div class="flashcard">
+    <div class="card-tag">${p.title}</div>
+    <div class="prompt-line" style="margin-top:0;font-size:1.1rem;color:var(--ink);">${q.q}</div>
+  </div>
+  <div class="options-grid" id="readingOpts">${optsHtml}</div>
+  <div class="next-row" id="nextRow"></div>
+  `;
+}
+
+
+function renderSummary(){
+  const total = state.mode==="lesen"
+    ? READING_DATA[state.level][state.passageIndex].questions.length
+    : DATA[state.level].topics[state.topicKey].items.length;
   const pct = Math.round((state.score/total)*100);
   const emoji = pct>=80 ? "🎉" : pct>=50 ? "🌟" : "💪";
   const msg = pct>=80 ? "Super da! Excellent work." : pct>=50 ? "Nalla progress! Keep going." : "Konjo practice pannunga — you'll get there.";
 
   const progress = loadProgress();
   if(!progress[state.level]) progress[state.level] = {};
-  const prevBest = progress[state.level][state.topicKey] || 0;
-  progress[state.level][state.topicKey] = Math.max(prevBest, pct);
+  const progKey = state.mode==="hoeren" ? "hoeren_"+state.topicKey
+                : state.mode==="lesen" ? "lesen_"+state.passageIndex
+                : state.topicKey;
+  const prevBest = progress[state.level][progKey] || 0;
+  progress[state.level][progKey] = Math.max(prevBest, pct);
   saveProgress(progress);
+
+  const backNav = state.mode==="lesen" ? "passages" : "topics";
+  const backLabel = state.mode==="lesen" ? "Other passages" : "Other topics";
 
   return `
   <div class="flashcard summary-card">
@@ -419,7 +614,7 @@ function renderSummary(){
     <div class="summary-score mono">${state.score} / ${total} correct — ${pct}%</div>
     <div class="cta-row">
       <button class="btn btn-primary" data-action="retry">Try again</button>
-      <button class="btn btn-ghost" data-nav="topics">Other topics</button>
+      <button class="btn btn-ghost" data-nav="${backNav}">${backLabel}</button>
     </div>
   </div>
   `;
@@ -461,27 +656,115 @@ function attachHandlers(){
   document.querySelectorAll("[data-nav]").forEach(el=>{
     el.onclick = ()=>{
       const nav = el.getAttribute("data-nav");
-      if(nav==="topics") state.screen="topics";
-      else if(nav==="levels"){ state.screen="levels"; }
-      else if(nav==="landing"){ state.screen="landing"; }
+      state.screen = nav;
       render();
     };
   });
   document.querySelectorAll("[data-level]").forEach(el=>{
-    el.onclick = ()=>{ state.level=el.getAttribute("data-level"); state.screen="topics"; render(); };
+    el.onclick = ()=>{ state.level=el.getAttribute("data-level"); state.screen="modes"; render(); };
+  });
+  document.querySelectorAll("[data-modeselect]").forEach(el=>{
+    el.onclick = ()=>{
+      const mode = el.getAttribute("data-modeselect");
+      state.mode = mode;
+      if(mode==="vocab"){ state.screen="topics"; }
+      else if(mode==="hoeren"){
+        if(!("speechSynthesis" in window)) return;
+        state.screen="topics";
+      }
+      else if(mode==="lesen"){
+        const passages = READING_DATA[state.level]||[];
+        if(passages.length===0) return;
+        state.screen="passages";
+      }
+      render();
+    };
   });
   document.querySelectorAll("[data-topic]").forEach(el=>{
     el.onclick = ()=>{
       state.topicKey = el.getAttribute("data-topic");
       state.qIndex=0; state.score=0; state.options=[];
-      state.screen="practice"; render();
+      state.screen = (state.mode==="hoeren") ? "hoerenPractice" : "practice";
+      render();
     };
   });
   document.querySelectorAll("[data-optid]").forEach(el=>{
     el.onclick = ()=>handleAnswer(el);
   });
+  document.querySelectorAll("[data-hoptid]").forEach(el=>{
+    el.onclick = ()=>handleHoerenAnswer(el);
+  });
+  document.querySelectorAll("[data-passage]").forEach(el=>{
+    el.onclick = ()=>{
+      state.passageIndex = parseInt(el.getAttribute("data-passage"),10);
+      state.passageStep = "read"; state.qIndex=0; state.score=0; state.locked=false;
+      state.screen="reading"; render();
+    };
+  });
+  const speakBtn = document.getElementById("speakBtn");
+  if(speakBtn) speakBtn.onclick = ()=>{
+    const topic = DATA[state.level].topics[state.topicKey];
+    speakGerman(topic.items[state.qIndex].de);
+  };
+  const speakPassageBtn = document.getElementById("speakPassageBtn");
+  if(speakPassageBtn) speakPassageBtn.onclick = ()=>{
+    const p = READING_DATA[state.level][state.passageIndex];
+    speakGerman(p.text);
+  };
+  const readingContinueBtn = document.getElementById("readingContinueBtn");
+  if(readingContinueBtn) readingContinueBtn.onclick = ()=>{
+    state.passageStep="questions"; state.qIndex=0; state.locked=false; render();
+  };
+  document.querySelectorAll("[data-ropt]").forEach(el=>{
+    el.onclick = ()=>handleReadingAnswer(el);
+  });
   const retryBtn = document.querySelector('[data-action="retry"]');
-  if(retryBtn) retryBtn.onclick = ()=>{ state.qIndex=0; state.score=0; state.options=[]; state.screen="practice"; render(); };
+  if(retryBtn) retryBtn.onclick = ()=>{
+    state.qIndex=0; state.score=0; state.options=[];
+    if(state.mode==="lesen"){ state.passageStep="read"; state.screen="reading"; }
+    else{ state.screen = (state.mode==="hoeren") ? "hoerenPractice" : "practice"; }
+    render();
+  };
+  const retryReadingBtn = document.querySelector('[data-action="retryReading"]');
+  if(retryReadingBtn) retryReadingBtn.onclick = ()=>{
+    state.passageStep="read"; state.qIndex=0; state.score=0; state.screen="reading"; render();
+  };
+}
+
+function handleReadingAnswer(btnEl){
+  if(state.locked) return;
+  state.locked = true;
+  const p = READING_DATA[state.level][state.passageIndex];
+  const q = p.questions[state.qIndex];
+  const chosen = btnEl.getAttribute("data-ropt");
+  const isCorrect = chosen === q.correct;
+  const feedback = document.getElementById("feedback");
+
+  document.querySelectorAll("[data-ropt]").forEach(b=>{
+    b.disabled = true;
+    if(b.getAttribute("data-ropt")===q.correct) b.classList.add("correct");
+    if(b===btnEl && !isCorrect) b.classList.add("wrong");
+  });
+
+  if(isCorrect){
+    state.score++;
+    bumpStreak();
+    feedback.textContent = "🟩 Correct-u! Super da";
+    feedback.className = "feedback-banner correct show";
+    burstConfetti();
+  }else{
+    feedback.textContent = `🟥 Wrong-u. Correct answer: ${q.correct}`;
+    feedback.className = "feedback-banner wrong show";
+  }
+
+  const nextRow = document.getElementById("nextRow");
+  const isLast = state.qIndex >= p.questions.length-1;
+  nextRow.innerHTML = `<button class="btn btn-primary" id="nextBtn">${isLast? "See results →" : "Next question →"}</button>`;
+  document.getElementById("nextBtn").onclick = ()=>{
+    if(isLast){ state.screen="summary"; }
+    else{ state.qIndex++; state.locked=false; state.screen="reading"; }
+    render();
+  };
 }
 
 function handleAnswer(btnEl){

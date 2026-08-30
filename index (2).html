@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thamizhil Deutsch — Learn German in Tamil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1A1420;
+    --bg2:#241A2E;
+    --card:#2C2038;
+    --cream:#F6ECD9;
+    --cream-dim:#CFC3AE;
+    --red:#C1453F;
+    --red-dim:#8A3230;
+    --gold:#E4A83B;
+    --teal:#2E9B82;
+    --indigo:#7B8AE8;
+    --wrong:#D9534F;
+    --line: rgba(246,236,217,0.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--cream);
+    font-family:'Work Sans', 'Noto Sans Tamil', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .ta{font-family:'Noto Sans Tamil','Work Sans',sans-serif;}
+  h1,h2,h3,.display{font-family:'Fraunces','Noto Sans Tamil',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  #app{max-width:920px;margin:0 auto;padding:0 20px 80px;}
+
+  /* ---------- NAV ---------- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 20px 10px;max-width:920px;margin:0 auto;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:700;font-size:1.15rem;letter-spacing:.2px;}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--gold);display:inline-block;}
+  .brand small{display:block;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--cream-dim);letter-spacing:1.5px;font-weight:400;text-transform:uppercase;margin-top:2px;}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:64px 0 40px;text-align:center;}
+  .eyebrow{
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--gold);margin-bottom:18px;
+  }
+  .hero h1{font-size:clamp(2.1rem,5vw,3.4rem);line-height:1.08;margin:0 0 26px;font-weight:600;}
+  .hero h1 .accent{color:var(--red);font-style:italic;}
+
+  /* split-flap board */
+  .flapboard{
+    display:inline-flex;gap:10px;align-items:stretch;margin:0 auto 30px;
+    background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:18px 26px;
+  }
+  .flap-col{display:flex;flex-direction:column;align-items:center;min-width:110px;}
+  .flap-lang{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:2px;color:var(--cream-dim);margin-bottom:8px;text-transform:uppercase;}
+  .flap-word{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.5rem;min-height:1.4em;
+    transition:opacity .25s ease, transform .25s ease;
+  }
+  .flap-word.ta{font-size:1.35rem;}
+  .flap-fade{opacity:0;transform:translateY(6px);}
+  .flap-div{width:1px;background:var(--line);margin:4px 0;}
+
+  .hero-sub{color:var(--cream-dim);font-size:1.02rem;max-width:480px;margin:0 auto 34px;line-height:1.6;}
+  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .btn{
+    padding:14px 30px;border-radius:100px;font-weight:600;font-size:.98rem;
+    transition:transform .15s ease, box-shadow .15s ease;display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--red);color:var(--cream);box-shadow:0 6px 20px rgba(193,69,63,.35);}
+  .btn-primary:hover{box-shadow:0 8px 26px rgba(193,69,63,.5);}
+  .btn-ghost{background:transparent;color:var(--cream);border:1px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--cream-dim);}
+
+  .stats{display:flex;gap:38px;justify-content:center;margin-top:56px;flex-wrap:wrap;}
+  .stat{text-align:center;}
+  .stat b{display:block;font-family:'Fraunces',serif;font-size:1.9rem;color:var(--gold);}
+  .stat span{font-size:.78rem;color:var(--cream-dim);letter-spacing:.4px;}
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section-head{margin:70px 0 26px;text-align:center;}
+  .section-head h2{font-size:1.7rem;margin:0 0 8px;}
+  .section-head p{color:var(--cream-dim);font-size:.94rem;margin:0;}
+  .back-btn{
+    display:inline-flex;align-items:center;gap:6px;color:var(--cream-dim);font-size:.88rem;
+    margin-bottom:22px;background:none;padding:0;
+  }
+  .back-btn:hover{color:var(--cream);}
+
+  /* ---------- LEVEL STAIRCASE ---------- */
+  .staircase{display:flex;flex-direction:column;gap:14px;margin-top:10px;}
+  .level-card{
+    display:flex;align-items:center;gap:18px;background:var(--card);border:1px solid var(--line);
+    border-radius:16px;padding:18px 22px;text-align:left;transition:transform .15s ease, border-color .15s ease;
+    width:100%;
+  }
+  .level-card:hover{transform:translateX(6px);border-color:var(--gold);}
+  .level-code{
+    font-family:'Space Mono',monospace;font-weight:700;font-size:1.05rem;background:var(--bg2);
+    color:var(--gold);padding:10px 14px;border-radius:10px;min-width:64px;text-align:center;
+  }
+  .level-info{flex:1;}
+  .level-info h3{margin:0 0 4px;font-size:1.1rem;}
+  .level-info span{font-size:.82rem;color:var(--cream-dim);}
+  .level-progress{font-family:'Space Mono',monospace;font-size:.78rem;color:var(--teal);}
+  /* stagger indent to feel like a staircase rising */
+  .staircase .level-card:nth-child(1){margin-left:0;}
+  .staircase .level-card:nth-child(2){margin-left:10px;}
+  .staircase .level-card:nth-child(3){margin-left:20px;}
+  .staircase .level-card:nth-child(4){margin-left:30px;}
+  .staircase .level-card:nth-child(5){margin-left:40px;}
+  .staircase .level-card:nth-child(6){margin-left:50px;}
+  .staircase .level-card:nth-child(7){margin-left:60px;}
+  .staircase .level-card:nth-child(8){margin-left:70px;}
+  @media(max-width:600px){
+    .staircase .level-card{margin-left:0 !important;}
+  }
+
+  /* ---------- TOPICS ---------- */
+  .topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
+  .topic-card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;text-align:left;
+    transition:transform .15s ease,border-color .15s ease;
+  }
+  .topic-card:hover{transform:translateY(-3px);border-color:var(--teal);}
+  .topic-card h3{margin:0 0 6px;font-size:1.02rem;}
+  .topic-card span{font-size:.8rem;color:var(--cream-dim);}
+
+  /* ---------- PRACTICE ---------- */
+  .practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:14px;}
+  .progress-track{flex:1;height:8px;background:var(--bg2);border-radius:100px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--gold);border-radius:100px;transition:width .35s ease;}
+  .streak-pill{
+    display:flex;align-items:center;gap:5px;background:var(--bg2);padding:6px 12px;border-radius:100px;
+    font-family:'Space Mono',monospace;font-size:.8rem;color:var(--gold);white-space:nowrap;
+  }
+
+  .flashcard{
+    background:var(--card);border:1px solid var(--line);border-radius:22px;padding:44px 30px;
+    text-align:center;margin-bottom:26px;position:relative;overflow:hidden;
+  }
+  .card-tag{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--cream-dim);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
+  .card-ta{font-size:1.9rem;margin:0 0 6px;font-weight:600;}
+  .card-en{color:var(--cream-dim);font-size:.95rem;margin-bottom:6px;}
+  .prompt-line{font-size:1.02rem;color:var(--cream-dim);margin-top:18px;}
+
+  .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:520px){.options-grid{grid-template-columns:1fr;}}
+  .opt-btn{
+    background:var(--bg2);border:1.5px solid var(--line);color:var(--cream);border-radius:14px;
+    padding:16px;font-size:1.05rem;font-weight:600;transition:all .15s ease;text-align:center;
+  }
+  .opt-btn:hover:not(:disabled){border-color:var(--gold);}
+  .opt-btn.correct{background:rgba(46,155,130,.18);border-color:var(--teal);color:var(--teal);}
+  .opt-btn.wrong{background:rgba(217,83,79,.18);border-color:var(--wrong);color:var(--wrong);animation:shake .35s ease;}
+  .opt-btn:disabled{cursor:default;}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+
+  .feedback-banner{
+    text-align:center;font-weight:700;font-size:1.1rem;margin-bottom:18px;padding:12px;border-radius:12px;
+    opacity:0;transform:translateY(-6px);transition:all .25s ease;
+  }
+  .feedback-banner.show{opacity:1;transform:translateY(0);}
+  .feedback-banner.correct{background:rgba(46,155,130,.15);color:var(--teal);}
+  .feedback-banner.wrong{background:rgba(217,83,79,.15);color:var(--wrong);}
+
+  .next-row{text-align:center;margin-top:20px;}
+
+  /* ---------- SUMMARY ---------- */
+  .summary-card{text-align:center;padding:60px 20px;}
+  .summary-emoji{font-size:3.4rem;margin-bottom:10px;}
+  .summary-card h2{font-size:2rem;margin:0 0 10px;}
+  .summary-score{font-family:'Space Mono',monospace;font-size:1.3rem;color:var(--gold);margin-bottom:30px;}
+
+  /* confetti */
+  .confetti{position:fixed;top:-10px;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:999;}
+
+  footer{text-align:center;color:var(--cream-dim);font-size:.8rem;margin-top:80px;padding-top:30px;border-top:1px solid var(--line);}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">
+    <span class="dot"></span>
+    <div>Thamizhil Deutsch
+      <small>தமிழில் Deutsch · Learn German in Tamil</small>
+    </div>
+  </div>
+</div>
+<div id="app"></div>
+
+<script>
+/* ============ DATA ============ */
+const DATA = {"A1.1": {"label": "Beginner Basics", "topics": {"greetings": {"label": "Vocabulary: Greetings", "items": [{"id": "a1.1-greet-1", "de": "Hallo", "ta": "வணக்கம்", "en": "", "ex": "Hallo, wie geht es dir?"}, {"id": "a1.1-greet-2", "de": "Guten Morgen", "ta": "காலை வணக்கம்", "en": "", "ex": "Guten Morgen, hast du gut geschlafen?"}, {"id": "a1.1-greet-3", "de": "Guten Tag", "ta": "மதிய வணக்கம்", "en": "", "ex": "Guten Tag, wie kann ich helfen?"}, {"id": "a1.1-greet-4", "de": "Guten Abend", "ta": "மாலை வணக்கம்", "en": "", "ex": "Guten Abend, wie war dein Tag?"}, {"id": "a1.1-greet-5", "de": "Gute Nacht", "ta": "இனிய இரவு", "en": "", "ex": "Gute Nacht, schlaf gut!"}, {"id": "a1.1-greet-6", "de": "Auf Wiedersehen", "ta": "பிரியாவிடை", "en": "", "ex": "Auf Wiedersehen, bis morgen!"}, {"id": "a1.1-greet-7", "de": "Tschüss", "ta": "பை பை", "en": "", "ex": "Tschüss, bis später!"}, {"id": "a1.1-greet-8", "de": "Danke", "ta": "நன்றி", "en": "", "ex": "Danke für deine Hilfe."}, {"id": "a1.1-greet-9", "de": "Danke schön", "ta": "மிக்க நன்றி", "en": "", "ex": "Danke schön für das Geschenk."}, {"id": "a1.1-greet-10", "de": "Bitte", "ta": "தயவுசெய்து", "en": "", "ex": "Bitte, nimm Platz."}, {"id": "a1.1-greet-11", "de": "Bitte schön", "ta": "பரவாயில்லை", "en": "", "ex": "Bitte schön, gern geschehen."}, {"id": "a1.1-greet-12", "de": "Entschuldigung", "ta": "மன்னிக்கவும்", "en": "", "ex": "Entschuldigung, wo ist der Bahnhof?"}, {"id": "a1.1-greet-13", "de": "Es tut mir leid", "ta": "வருந்துகிறேன்", "en": "", "ex": "Es tut mir leid, ich bin spät."}, {"id": "a1.1-greet-14", "de": "Ja", "ta": "ஆம்", "en": "", "ex": "Ja, das ist richtig."}, {"id": "a1.1-greet-15", "de": "Nein", "ta": "இல்லை", "en": "", "ex": "Nein, das stimmt nicht."}, {"id": "a1.1-greet-16", "de": "Vielleicht", "ta": "ஒருவேளை", "en": "", "ex": "Vielleicht komme ich morgen."}, {"id": "a1.1-greet-17", "de": "Willkommen", "ta": "வரவேற்கிறோம்", "en": "", "ex": "Willkommen in Deutschland!"}, {"id": "a1.1-greet-18", "de": "Alles Gute", "ta": "எல்லாம் நலமாக நடக்கட்டும்", "en": "", "ex": "Alles Gute zum Geburtstag!"}]}, "numbers": {"label": "Numbers 1-20 & Tens", "items": [{"id": "a1.1-num-1", "de": "eins", "ta": "ஒன்று", "en": "", "ex": "Ich habe eins."}, {"id": "a1.1-num-2", "de": "zwei", "ta": "இரண்டு", "en": "", "ex": "Ich habe zwei Bücher."}, {"id": "a1.1-num-3", "de": "drei", "ta": "மூன்று", "en": "", "ex": "Wir sind drei Freunde."}, {"id": "a1.1-num-4", "de": "vier", "ta": "நான்கு", "en": "", "ex": "Der Tisch hat vier Beine."}, {"id": "a1.1-num-5", "de": "fünf", "ta": "ஐந்து", "en": "", "ex": "Ich habe fünf Finger."}, {"id": "a1.1-num-6", "de": "sechs", "ta": "ஆறு", "en": "", "ex": "Die Schule beginnt um sechs Uhr."}, {"id": "a1.1-num-7", "de": "sieben", "ta": "ஏழு", "en": "", "ex": "Eine Woche hat sieben Tage."}, {"id": "a1.1-num-8", "de": "acht", "ta": "எட்டு", "en": "", "ex": "Ich stehe um acht Uhr auf."}, {"id": "a1.1-num-9", "de": "neun", "ta": "ஒன்பது", "en": "", "ex": "Das Spiel beginnt um neun Uhr."}, {"id": "a1.1-num-10", "de": "zehn", "ta": "பத்து", "en": "", "ex": "Ich zähle bis zehn."}, {"id": "a1.1-num-11", "de": "elf", "ta": "பதினொன்று", "en": "", "ex": "Die Uhr zeigt elf."}, {"id": "a1.1-num-12", "de": "zwölf", "ta": "பன்னிரண்டு", "en": "", "ex": "Ein Jahr hat zwölf Monate."}, {"id": "a1.1-num-13", "de": "dreizehn", "ta": "பதிமூன்று", "en": "", "ex": "Sie ist dreizehn Jahre alt."}, {"id": "a1.1-num-14", "de": "vierzehn", "ta": "பதினான்கு", "en": "", "ex": "Ich komme in vierzehn Tagen."}, {"id": "a1.1-num-15", "de": "fünfzehn", "ta": "பதினைந்து", "en": "", "ex": "Die Pause dauert fünfzehn Minuten."}, {"id": "a1.1-num-16", "de": "zwanzig", "ta": "இருபது", "en": "", "ex": "Ich habe zwanzig Euro."}, {"id": "a1.1-num-17", "de": "dreißig", "ta": "முப்பது", "en": "", "ex": "Der Weg dauert dreißig Minuten."}, {"id": "a1.1-num-18", "de": "vierzig", "ta": "நாற்பது", "en": "", "ex": "Mein Vater ist vierzig Jahre alt."}, {"id": "a1.1-num-19", "de": "fünfzig", "ta": "ஐம்பது", "en": "", "ex": "Das Buch hat fünfzig Seiten."}, {"id": "a1.1-num-20", "de": "hundert", "ta": "நூறு", "en": "", "ex": "Ich zähle bis hundert."}]}}}, "A1.2": {"label": "Family & Food", "topics": {"family": {"label": "Vocabulary: Family", "items": [{"id": "a1.2-fam-1", "de": "die Familie", "ta": "குடும்பம்", "en": "", "ex": "Meine Familie ist groß."}, {"id": "a1.2-fam-2", "de": "die Mutter", "ta": "அம்மா", "en": "", "ex": "Meine Mutter kocht sehr gut."}, {"id": "a1.2-fam-3", "de": "der Vater", "ta": "அப்பா", "en": "", "ex": "Mein Vater arbeitet in der Stadt."}, {"id": "a1.2-fam-4", "de": "die Eltern", "ta": "பெற்றோர்", "en": "", "ex": "Meine Eltern wohnen in Chennai."}, {"id": "a1.2-fam-5", "de": "die Schwester", "ta": "சகோதரி", "en": "", "ex": "Meine Schwester lernt Deutsch."}, {"id": "a1.2-fam-6", "de": "der Bruder", "ta": "சகோதரன்", "en": "", "ex": "Mein Bruder spielt Fußball."}, {"id": "a1.2-fam-7", "de": "die Geschwister", "ta": "உடன்பிறப்புகள்", "en": "", "ex": "Ich habe zwei Geschwister."}, {"id": "a1.2-fam-8", "de": "die Großmutter", "ta": "பாட்டி", "en": "", "ex": "Meine Großmutter erzählt schöne Geschichten."}, {"id": "a1.2-fam-9", "de": "der Großvater", "ta": "தாத்தா", "en": "", "ex": "Mein Großvater liest jeden Tag Zeitung."}, {"id": "a1.2-fam-10", "de": "die Tante", "ta": "அத்தை", "en": "", "ex": "Meine Tante wohnt in Hamburg."}, {"id": "a1.2-fam-11", "de": "der Onkel", "ta": "மாமா", "en": "", "ex": "Mein Onkel ist Lehrer."}, {"id": "a1.2-fam-12", "de": "der Sohn", "ta": "மகன்", "en": "", "ex": "Ihr Sohn geht zur Schule."}, {"id": "a1.2-fam-13", "de": "die Tochter", "ta": "மகள்", "en": "", "ex": "Seine Tochter lernt Klavier."}, {"id": "a1.2-fam-14", "de": "der Ehemann", "ta": "கணவன்", "en": "", "ex": "Ihr Ehemann arbeitet im Büro."}, {"id": "a1.2-fam-15", "de": "die Ehefrau", "ta": "மனைவி", "en": "", "ex": "Seine Ehefrau ist Ärztin."}, {"id": "a1.2-fam-16", "de": "das Kind", "ta": "குழந்தை", "en": "", "ex": "Das Kind spielt im Garten."}]}, "food": {"label": "Vocabulary: Food", "items": [{"id": "a1.2-food-1", "de": "das Brot", "ta": "ரொட்டி", "en": "", "ex": "Ich esse Brot zum Frühstück."}, {"id": "a1.2-food-2", "de": "das Wasser", "ta": "தண்ணீர்", "en": "", "ex": "Ich trinke viel Wasser."}, {"id": "a1.2-food-3", "de": "der Reis", "ta": "சாதம்", "en": "", "ex": "Wir essen jeden Tag Reis."}, {"id": "a1.2-food-4", "de": "die Milch", "ta": "பால்", "en": "", "ex": "Das Kind trinkt Milch."}, {"id": "a1.2-food-5", "de": "das Obst", "ta": "பழம்", "en": "", "ex": "Obst ist gesund."}, {"id": "a1.2-food-6", "de": "das Gemüse", "ta": "காய்கறி", "en": "", "ex": "Ich mag frisches Gemüse."}, {"id": "a1.2-food-7", "de": "der Apfel", "ta": "ஆப்பிள்", "en": "", "ex": "Ich esse jeden Tag einen Apfel."}, {"id": "a1.2-food-8", "de": "die Banane", "ta": "வாழைப்பழம்", "en": "", "ex": "Die Banane ist süß."}, {"id": "a1.2-food-9", "de": "das Ei", "ta": "முட்டை", "en": "", "ex": "Ich esse ein Ei zum Frühstück."}, {"id": "a1.2-food-10", "de": "der Käse", "ta": "பாலாடைக்கட்டி", "en": "", "ex": "Ich mag Käse mit Brot."}, {"id": "a1.2-food-11", "de": "der Zucker", "ta": "சர்க்கரை", "en": "", "ex": "Ich nehme keinen Zucker im Tee."}, {"id": "a1.2-food-12", "de": "das Salz", "ta": "உப்பு", "en": "", "ex": "Das Essen braucht mehr Salz."}, {"id": "a1.2-food-13", "de": "der Tee", "ta": "தேநீர்", "en": "", "ex": "Ich trinke morgens Tee."}, {"id": "a1.2-food-14", "de": "der Kaffee", "ta": "காபி", "en": "", "ex": "Mein Vater trinkt gern Kaffee."}, {"id": "a1.2-food-15", "de": "das Fleisch", "ta": "இறைச்சி", "en": "", "ex": "Ich esse kein Fleisch."}, {"id": "a1.2-food-16", "de": "der Fisch", "ta": "மீன்", "en": "", "ex": "Der Fisch schmeckt gut."}, {"id": "a1.2-food-17", "de": "das Frühstück", "ta": "காலை உணவு", "en": "", "ex": "Das Frühstück ist um sieben Uhr."}, {"id": "a1.2-food-18", "de": "das Mittagessen", "ta": "மதிய உணவு", "en": "", "ex": "Das Mittagessen ist fertig."}, {"id": "a1.2-food-19", "de": "das Abendessen", "ta": "இரவு உணவு", "en": "", "ex": "Wir essen um acht Uhr Abendessen."}, {"id": "a1.2-food-20", "de": "hungrig", "ta": "பசி", "en": "", "ex": "Ich bin sehr hungrig."}]}}}, "A2.1": {"label": "Home & Shopping", "topics": {"housing": {"label": "Vocabulary: Housing", "items": [{"id": "a2.1-house-1", "de": "die Wohnung", "ta": "வீடு / அபார்ட்மென்ட்", "en": "", "ex": "Meine Wohnung ist klein."}, {"id": "a2.1-house-2", "de": "das Haus", "ta": "வீடு", "en": "", "ex": "Wir haben ein großes Haus."}, {"id": "a2.1-house-3", "de": "das Zimmer", "ta": "அறை", "en": "", "ex": "Mein Zimmer ist sehr hell."}, {"id": "a2.1-house-4", "de": "die Küche", "ta": "சமையலறை", "en": "", "ex": "Die Küche ist sehr modern."}, {"id": "a2.1-house-5", "de": "das Badezimmer", "ta": "குளியலறை", "en": "", "ex": "Das Badezimmer ist im ersten Stock."}, {"id": "a2.1-house-6", "de": "das Wohnzimmer", "ta": "வரவேற்பறை", "en": "", "ex": "Wir sitzen abends im Wohnzimmer."}, {"id": "a2.1-house-7", "de": "das Schlafzimmer", "ta": "படுக்கையறை", "en": "", "ex": "Das Schlafzimmer ist ruhig."}, {"id": "a2.1-house-8", "de": "der Balkon", "ta": "மொட்டைமாடி", "en": "", "ex": "Der Balkon hat eine schöne Aussicht."}, {"id": "a2.1-house-9", "de": "die Miete", "ta": "வாடகை", "en": "", "ex": "Die Miete ist jeden Monat fällig."}, {"id": "a2.1-house-10", "de": "der Schlüssel", "ta": "சாவி", "en": "", "ex": "Ich habe meinen Schlüssel vergessen."}, {"id": "a2.1-house-11", "de": "das Fenster", "ta": "ஜன்னல்", "en": "", "ex": "Bitte mach das Fenster auf."}, {"id": "a2.1-house-12", "de": "die Tür", "ta": "கதவு", "en": "", "ex": "Die Tür ist geschlossen."}, {"id": "a2.1-house-13", "de": "der Garten", "ta": "தோட்டம்", "en": "", "ex": "Der Garten hat viele Blumen."}, {"id": "a2.1-house-14", "de": "der Stock", "ta": "மாடி", "en": "", "ex": "Ich wohne im dritten Stock."}, {"id": "a2.1-house-15", "de": "der Nachbar", "ta": "அண்டை வீட்டார்", "en": "", "ex": "Mein Nachbar ist sehr freundlich."}]}, "shopping": {"label": "Vocabulary: Shopping", "items": [{"id": "a2.1-shop-1", "de": "einkaufen", "ta": "வாங்குதல்", "en": "", "ex": "Ich gehe heute einkaufen."}, {"id": "a2.1-shop-2", "de": "der Supermarkt", "ta": "சூப்பர்மார்க்கெட்", "en": "", "ex": "Der Supermarkt ist um die Ecke."}, {"id": "a2.1-shop-3", "de": "das Geschäft", "ta": "கடை", "en": "", "ex": "Das Geschäft öffnet um neun Uhr."}, {"id": "a2.1-shop-4", "de": "das Geld", "ta": "பணம்", "en": "", "ex": "Ich habe nicht viel Geld."}, {"id": "a2.1-shop-5", "de": "bezahlen", "ta": "பணம் செலுத்த", "en": "", "ex": "Ich möchte mit Karte bezahlen."}, {"id": "a2.1-shop-6", "de": "der Preis", "ta": "விலை", "en": "", "ex": "Der Preis ist zu hoch."}, {"id": "a2.1-shop-7", "de": "billig", "ta": "மலிவான", "en": "", "ex": "Dieses Kleid ist sehr billig."}, {"id": "a2.1-shop-8", "de": "teuer", "ta": "விலை உயர்ந்த", "en": "", "ex": "Das Auto ist zu teuer."}, {"id": "a2.1-shop-9", "de": "die Kasse", "ta": "காசாளர் மேசை", "en": "", "ex": "Die Schlange an der Kasse ist lang."}, {"id": "a2.1-shop-10", "de": "die Kleidung", "ta": "ஆடை", "en": "", "ex": "Ich brauche neue Kleidung."}, {"id": "a2.1-shop-11", "de": "die Schuhe", "ta": "காலணி", "en": "", "ex": "Meine Schuhe sind neu."}, {"id": "a2.1-shop-12", "de": "die Größe", "ta": "அளவு", "en": "", "ex": "Welche Größe brauchen Sie?"}, {"id": "a2.1-shop-13", "de": "die Quittung", "ta": "ரசீது", "en": "", "ex": "Ich brauche eine Quittung, bitte."}, {"id": "a2.1-shop-14", "de": "der Rabatt", "ta": "தள்ளுபடி", "en": "", "ex": "Es gibt heute zwanzig Prozent Rabatt."}, {"id": "a2.1-shop-15", "de": "umtauschen", "ta": "மாற்றிக்கொள்ள", "en": "", "ex": "Kann ich das umtauschen?"}]}}}, "A2.2": {"label": "Transport & Hobbies", "topics": {"transport": {"label": "Vocabulary: Transport", "items": [{"id": "a2.2-trans-1", "de": "der Bus", "ta": "பேருந்து", "en": "", "ex": "Ich fahre mit dem Bus zur Arbeit."}, {"id": "a2.2-trans-2", "de": "der Zug", "ta": "ரயில்", "en": "", "ex": "Der Zug kommt pünktlich."}, {"id": "a2.2-trans-3", "de": "das Auto", "ta": "கார்", "en": "", "ex": "Mein Auto ist kaputt."}, {"id": "a2.2-trans-4", "de": "das Fahrrad", "ta": "மிதிவண்டி", "en": "", "ex": "Ich fahre gern Fahrrad."}, {"id": "a2.2-trans-5", "de": "die U-Bahn", "ta": "நிலத்தடி ரயில்", "en": "", "ex": "Die U-Bahn ist sehr schnell."}, {"id": "a2.2-trans-6", "de": "das Flugzeug", "ta": "விமானம்", "en": "", "ex": "Das Flugzeug fliegt nach Berlin."}, {"id": "a2.2-trans-7", "de": "der Bahnhof", "ta": "ரயில் நிலையம்", "en": "", "ex": "Der Bahnhof ist groß."}, {"id": "a2.2-trans-8", "de": "die Haltestelle", "ta": "நிறுத்தம்", "en": "", "ex": "Die Haltestelle ist nah."}, {"id": "a2.2-trans-9", "de": "das Ticket", "ta": "டிக்கெட்", "en": "", "ex": "Ich kaufe ein Ticket."}, {"id": "a2.2-trans-10", "de": "fahren", "ta": "ஓட்ட / பயணிக்க", "en": "", "ex": "Wir fahren nach München."}, {"id": "a2.2-trans-11", "de": "laufen", "ta": "நடக்க", "en": "", "ex": "Ich laufe zur Arbeit."}, {"id": "a2.2-trans-12", "de": "die Ampel", "ta": "போக்குவரத்து விளக்கு", "en": "", "ex": "Die Ampel ist rot."}, {"id": "a2.2-trans-13", "de": "die Straße", "ta": "தெரு", "en": "", "ex": "Die Straße ist sehr laut."}, {"id": "a2.2-trans-14", "de": "der Führerschein", "ta": "ஓட்டுநர் உரிமம்", "en": "", "ex": "Ich habe einen Führerschein."}, {"id": "a2.2-trans-15", "de": "das Taxi", "ta": "டாக்ஸி", "en": "", "ex": "Wir nehmen ein Taxi."}]}, "hobbies": {"label": "Vocabulary: Hobbies & Free Time", "items": [{"id": "a2.2-hob-1", "de": "das Hobby", "ta": "பொழுதுபோக்கு", "en": "", "ex": "Mein Hobby ist Lesen."}, {"id": "a2.2-hob-2", "de": "lesen", "ta": "படிக்க", "en": "", "ex": "Ich lese gern Bücher."}, {"id": "a2.2-hob-3", "de": "schwimmen", "ta": "நீச்சல் அடிக்க", "en": "", "ex": "Ich schwimme jeden Sommer."}, {"id": "a2.2-hob-4", "de": "singen", "ta": "பாட", "en": "", "ex": "Sie singt sehr schön."}, {"id": "a2.2-hob-5", "de": "tanzen", "ta": "நடனமாட", "en": "", "ex": "Wir tanzen auf der Party."}, {"id": "a2.2-hob-6", "de": "kochen", "ta": "சமைக்க", "en": "", "ex": "Meine Mutter kocht jeden Tag."}, {"id": "a2.2-hob-7", "de": "malen", "ta": "வரைய", "en": "", "ex": "Das Kind malt ein Bild."}, {"id": "a2.2-hob-8", "de": "reisen", "ta": "பயணம் செய்ய", "en": "", "ex": "Ich reise gern nach Indien."}, {"id": "a2.2-hob-9", "de": "fotografieren", "ta": "புகைப்படம் எடுக்க", "en": "", "ex": "Er fotografiert gern die Natur."}, {"id": "a2.2-hob-10", "de": "die Musik", "ta": "இசை", "en": "", "ex": "Ich höre gern Musik."}, {"id": "a2.2-hob-11", "de": "der Film", "ta": "திரைப்படம்", "en": "", "ex": "Wir sehen heute einen Film."}, {"id": "a2.2-hob-12", "de": "das Buch", "ta": "புத்தகம்", "en": "", "ex": "Dieses Buch ist sehr interessant."}, {"id": "a2.2-hob-13", "de": "der Sport", "ta": "விளையாட்டு", "en": "", "ex": "Sport hält uns gesund."}, {"id": "a2.2-hob-14", "de": "wandern", "ta": "நடைப்பயணம் செல்ல", "en": "", "ex": "Am Wochenende wandern wir im Wald."}, {"id": "a2.2-hob-15", "de": "die Freizeit", "ta": "ஓய்வு நேரம்", "en": "", "ex": "In meiner Freizeit lese ich."}]}}}, "B1.1": {"label": "News & Travel", "topics": {"media_news": {"label": "Vocabulary: Media & News", "items": [{"id": "b1.1-med-1", "de": "die Nachrichten", "ta": "செய்திகள்", "en": "the news", "ex": "Ich sehe jeden Abend die Nachrichten."}, {"id": "b1.1-med-2", "de": "die Zeitung", "ta": "செய்தித்தாள்", "en": "newspaper", "ex": "Er liest jeden Morgen die Zeitung."}, {"id": "b1.1-med-3", "de": "der Bericht", "ta": "அறிக்கை", "en": "report", "ex": "Der Bericht ist sehr informativ."}, {"id": "b1.1-med-4", "de": "die Meinung", "ta": "கருத்து", "en": "opinion", "ex": "Was ist deine Meinung dazu?"}, {"id": "b1.1-med-5", "de": "die Werbung", "ta": "விளம்பரம்", "en": "advertisement", "ex": "Die Werbung ist sehr bunt."}, {"id": "b1.1-med-6", "de": "die Quelle", "ta": "மூலம்", "en": "source", "ex": "Ist diese Quelle zuverlässig?"}, {"id": "b1.1-med-7", "de": "veröffentlichen", "ta": "வெளியிட", "en": "to publish", "ex": "Die Zeitung veröffentlicht den Artikel."}, {"id": "b1.1-med-8", "de": "die Meldung", "ta": "தகவல் அறிவிப்பு", "en": "announcement/news item", "ex": "Die Meldung kam heute Morgen."}, {"id": "b1.1-med-9", "de": "der Journalist", "ta": "பத்திரிகையாளர்", "en": "journalist", "ex": "Der Journalist schreibt einen Artikel."}, {"id": "b1.1-med-10", "de": "die Meinungsfreiheit", "ta": "கருத்து சுதந்திரம்", "en": "freedom of speech", "ex": "Meinungsfreiheit ist wichtig."}, {"id": "b1.1-med-11", "de": "beeinflussen", "ta": "பாதிக்க", "en": "to influence", "ex": "Medien beeinflussen unsere Meinung."}, {"id": "b1.1-med-12", "de": "die Umfrage", "ta": "கருத்துக்கணிப்பு", "en": "survey/poll", "ex": "Die Umfrage zeigt interessante Ergebnisse."}, {"id": "b1.1-med-13", "de": "das Ereignis", "ta": "நிகழ்வு", "en": "event", "ex": "Das Ereignis war sehr wichtig."}, {"id": "b1.1-med-14", "de": "aktuell", "ta": "தற்போதைய", "en": "current/up-to-date", "ex": "Das ist eine aktuelle Nachricht."}, {"id": "b1.1-med-15", "de": "das soziale Netzwerk", "ta": "சமூக வலைத்தளம்", "en": "social network", "ex": "Ich benutze soziale Netzwerke oft."}]}, "travel_tourism": {"label": "Vocabulary: Travel & Tourism", "items": [{"id": "b1.1-trav-1", "de": "die Reise", "ta": "பயணம்", "en": "trip/journey", "ex": "Die Reise war unvergesslich."}, {"id": "b1.1-trav-2", "de": "das Reiseziel", "ta": "பயண இலக்கு", "en": "destination", "ex": "Unser Reiseziel ist Italien."}, {"id": "b1.1-trav-3", "de": "die Unterkunft", "ta": "தங்குமிடம்", "en": "accommodation", "ex": "Wir suchen eine Unterkunft."}, {"id": "b1.1-trav-4", "de": "buchen", "ta": "முன்பதிவு செய்ய", "en": "to book", "ex": "Ich buche ein Hotel."}, {"id": "b1.1-trav-5", "de": "der Reisepass", "ta": "கடவுச்சீட்டு", "en": "passport", "ex": "Ich brauche einen gültigen Reisepass."}, {"id": "b1.1-trav-6", "de": "das Visum", "ta": "விசா", "en": "visa", "ex": "Ich brauche ein Visum für dieses Land."}, {"id": "b1.1-trav-7", "de": "die Sehenswürdigkeit", "ta": "பார்வையிடும் இடம்", "en": "tourist attraction", "ex": "Diese Sehenswürdigkeit ist sehr bekannt."}, {"id": "b1.1-trav-8", "de": "das Gepäck", "ta": "சாமான்", "en": "luggage", "ex": "Mein Gepäck ist schwer."}, {"id": "b1.1-trav-9", "de": "der Flughafen", "ta": "விமான நிலையம்", "en": "airport", "ex": "Wir sind am Flughafen angekommen."}, {"id": "b1.1-trav-10", "de": "verspätet", "ta": "தாமதமான", "en": "delayed", "ex": "Der Flug ist verspätet."}, {"id": "b1.1-trav-11", "de": "die Kultur", "ta": "பண்பாடு", "en": "culture", "ex": "Ich interessiere mich für die lokale Kultur."}, {"id": "b1.1-trav-12", "de": "die Erfahrung machen", "ta": "அனுபவம் பெற", "en": "to have an experience", "ex": "Ich möchte neue Erfahrungen machen."}, {"id": "b1.1-trav-13", "de": "die Grenze", "ta": "எல்லை", "en": "border", "ex": "Wir überqueren die Grenze."}, {"id": "b1.1-trav-14", "de": "die Landessprache", "ta": "தேசிய மொழி", "en": "native/national language", "ex": "Ich lerne die Landessprache."}, {"id": "b1.1-trav-15", "de": "die Erinnerung", "ta": "நினைவு", "en": "memory", "ex": "Diese Reise bleibt eine schöne Erinnerung."}]}}}, "B1.2": {"label": "Relationships & Tech", "topics": {"relationships_social": {"label": "Vocabulary: Relationships & Social Life", "items": [{"id": "b1.2-rel-1", "de": "die Beziehung", "ta": "உறவு", "en": "relationship", "ex": "Wir haben eine gute Beziehung."}, {"id": "b1.2-rel-2", "de": "die Freundschaft", "ta": "நட்பு", "en": "friendship", "ex": "Unsere Freundschaft ist wichtig."}, {"id": "b1.2-rel-3", "de": "vertrauen", "ta": "நம்ப", "en": "to trust", "ex": "Ich vertraue dir."}, {"id": "b1.2-rel-4", "de": "sich streiten", "ta": "சண்டையிட", "en": "to argue", "ex": "Wir streiten uns selten."}, {"id": "b1.2-rel-5", "de": "sich versöhnen", "ta": "சமாதானமாக", "en": "to reconcile", "ex": "Sie haben sich versöhnt."}, {"id": "b1.2-rel-6", "de": "unterstützen", "ta": "ஆதரிக்க", "en": "to support", "ex": "Meine Familie unterstützt mich immer."}, {"id": "b1.2-rel-7", "de": "die Ehe", "ta": "திருமணம்", "en": "marriage", "ex": "Sie planen ihre Ehe."}, {"id": "b1.2-rel-8", "de": "die Verabredung", "ta": "சந்திப்பு (திட்டமிடப்பட்ட)", "en": "date/appointment", "ex": "Ich habe eine Verabredung mit Freunden."}, {"id": "b1.2-rel-9", "de": "gemeinsam", "ta": "ஒன்றாக", "en": "together", "ex": "Wir machen das gemeinsam."}, {"id": "b1.2-rel-10", "de": "der Streit", "ta": "சண்டை", "en": "argument/quarrel", "ex": "Der Streit war nicht schlimm."}, {"id": "b1.2-rel-11", "de": "sich kümmern um", "ta": "கவனித்துக்கொள்ள", "en": "to take care of", "ex": "Sie kümmert sich um ihre Eltern."}, {"id": "b1.2-rel-12", "de": "die Gemeinschaft", "ta": "சமூகம்", "en": "community", "ex": "Unsere Gemeinschaft ist stark."}, {"id": "b1.2-rel-13", "de": "der Kontakt", "ta": "தொடர்பு", "en": "contact", "ex": "Wir haben Kontakt gehalten."}, {"id": "b1.2-rel-14", "de": "einsam sein", "ta": "தனிமையாக இருக்க", "en": "to be lonely", "ex": "Er fühlt sich manchmal einsam."}, {"id": "b1.2-rel-15", "de": "die Rücksicht", "ta": "பரிசீலனை", "en": "consideration", "ex": "Er nimmt Rücksicht auf andere."}]}, "technology_internet": {"label": "Vocabulary: Technology & Internet", "items": [{"id": "b1.2-tech-1", "de": "die Technologie", "ta": "தொழில்நுட்பம்", "en": "technology", "ex": "Technologie verändert unser Leben."}, {"id": "b1.2-tech-2", "de": "die künstliche Intelligenz", "ta": "செயற்கை நுண்ணறிவு", "en": "artificial intelligence", "ex": "Künstliche Intelligenz wird immer wichtiger."}, {"id": "b1.2-tech-3", "de": "der Computer", "ta": "கணினி", "en": "computer", "ex": "Mein Computer ist langsam."}, {"id": "b1.2-tech-4", "de": "die Software", "ta": "மென்பொருள்", "en": "software", "ex": "Diese Software ist nützlich."}, {"id": "b1.2-tech-5", "de": "die Daten", "ta": "தரவு", "en": "data", "ex": "Diese Daten sind wichtig."}, {"id": "b1.2-tech-6", "de": "der Datenschutz", "ta": "தரவு பாதுகாப்பு", "en": "data protection/privacy", "ex": "Datenschutz ist heutzutage sehr wichtig."}, {"id": "b1.2-tech-7", "de": "hacken", "ta": "ஹேக் செய்ய", "en": "to hack", "ex": "Jemand hat mein Konto gehackt."}, {"id": "b1.2-tech-8", "de": "digital", "ta": "டிஜிட்டல்", "en": "digital", "ex": "Wir leben in einer digitalen Welt."}, {"id": "b1.2-tech-9", "de": "die Erfindung", "ta": "கண்டுபிடிப்பு", "en": "invention", "ex": "Das Internet ist eine wichtige Erfindung."}, {"id": "b1.2-tech-10", "de": "entwickeln", "ta": "உருவாக்க", "en": "to develop", "ex": "Sie entwickeln eine neue App."}, {"id": "b1.2-tech-11", "de": "die Wolke (Cloud)", "ta": "க்ளவுட் சேமிப்பு", "en": "cloud (storage)", "ex": "Ich speichere Fotos in der Cloud."}, {"id": "b1.2-tech-12", "de": "automatisch", "ta": "தானியங்கி", "en": "automatic", "ex": "Diese Maschine funktioniert automatisch."}, {"id": "b1.2-tech-13", "de": "der Fortschritt", "ta": "முன்னேற்றம்", "en": "progress", "ex": "Der technische Fortschritt ist schnell."}, {"id": "b1.2-tech-14", "de": "die Anwendung", "ta": "பயன்பாடு", "en": "application (use)", "ex": "Diese Technologie hat viele Anwendungen."}, {"id": "b1.2-tech-15", "de": "vernetzt", "ta": "இணைக்கப்பட்ட", "en": "connected/networked", "ex": "Alles ist heute vernetzt."}]}}}, "B2.1": {"label": "Economy & Politics", "topics": {"economy_business": {"label": "Vocabulary: Economy & Business", "items": [{"id": "b2.1-eco-1", "de": "die Wirtschaft", "ta": "பொருளாதாரம்", "en": "economy", "ex": "Die Wirtschaft wächst langsam."}, {"id": "b2.1-eco-2", "de": "das Unternehmen", "ta": "நிறுவனம்", "en": "company/enterprise", "ex": "Das Unternehmen ist sehr erfolgreich."}, {"id": "b2.1-eco-3", "de": "der Markt", "ta": "சந்தை", "en": "market", "ex": "Der Markt ist sehr wettbewerbsfähig."}, {"id": "b2.1-eco-4", "de": "die Investition", "ta": "முதலீடு", "en": "investment", "ex": "Diese Investition ist riskant."}, {"id": "b2.1-eco-5", "de": "der Gewinn", "ta": "லாபம்", "en": "profit", "ex": "Die Firma macht großen Gewinn."}, {"id": "b2.1-eco-6", "de": "der Verlust", "ta": "நஷ்டம்", "en": "loss", "ex": "Das Unternehmen hatte einen Verlust."}, {"id": "b2.1-eco-7", "de": "die Konkurrenz", "ta": "போட்டி", "en": "competition", "ex": "Die Konkurrenz ist stark."}, {"id": "b2.1-eco-8", "de": "die Nachfrage", "ta": "தேவை", "en": "demand", "ex": "Die Nachfrage steigt."}, {"id": "b2.1-eco-9", "de": "das Angebot", "ta": "வழங்கல்", "en": "supply/offer", "ex": "Das Angebot ist begrenzt."}, {"id": "b2.1-eco-10", "de": "die Steuer", "ta": "வரி", "en": "tax", "ex": "Wir zahlen jedes Jahr Steuern."}, {"id": "b2.1-eco-11", "de": "die Krise", "ta": "நெருக்கடி", "en": "crisis", "ex": "Die Wirtschaftskrise betraf viele Menschen."}, {"id": "b2.1-eco-12", "de": "die Verhandlung", "ta": "பேச்சுவார்த்தை", "en": "negotiation", "ex": "Die Verhandlung dauerte lange."}, {"id": "b2.1-eco-13", "de": "der Vertrag", "ta": "ஒப்பந்தம்", "en": "contract", "ex": "Wir unterschreiben den Vertrag."}, {"id": "b2.1-eco-14", "de": "die Globalisierung", "ta": "உலகமயமாக்கல்", "en": "globalization", "ex": "Globalisierung verändert die Wirtschaft."}, {"id": "b2.1-eco-15", "de": "nachhaltig wirtschaften", "ta": "நிலைத்தன்மையுடன் செயல்பட", "en": "to operate sustainably", "ex": "Firmen sollten nachhaltig wirtschaften."}]}, "politics_government": {"label": "Vocabulary: Politics & Government", "items": [{"id": "b2.1-pol-1", "de": "die Politik", "ta": "அரசியல்", "en": "politics", "ex": "Ich interessiere mich für Politik."}, {"id": "b2.1-pol-2", "de": "die Regierung", "ta": "அரசாங்கம்", "en": "government", "ex": "Die Regierung trifft wichtige Entscheidungen."}, {"id": "b2.1-pol-3", "de": "die Wahl", "ta": "தேர்தல்", "en": "election", "ex": "Die Wahl findet im Herbst statt."}, {"id": "b2.1-pol-4", "de": "wählen", "ta": "வாக்களிக்க", "en": "to vote", "ex": "Jeder Bürger darf wählen."}, {"id": "b2.1-pol-5", "de": "das Gesetz", "ta": "சட்டம்", "en": "law", "ex": "Das neue Gesetz tritt bald in Kraft."}, {"id": "b2.1-pol-6", "de": "die Partei", "ta": "கட்சி", "en": "political party", "ex": "Er ist Mitglied einer Partei."}, {"id": "b2.1-pol-7", "de": "die Demokratie", "ta": "ஜனநாயகம்", "en": "democracy", "ex": "Demokratie gibt den Bürgern eine Stimme."}, {"id": "b2.1-pol-8", "de": "das Recht", "ta": "உரிமை", "en": "right (legal)", "ex": "Jeder hat das Recht auf Bildung."}, {"id": "b2.1-pol-9", "de": "die Verantwortung", "ta": "பொறுப்பு", "en": "responsibility", "ex": "Die Regierung trägt Verantwortung."}, {"id": "b2.1-pol-10", "de": "die Entscheidung", "ta": "முடிவு", "en": "decision", "ex": "Das war eine schwierige Entscheidung."}, {"id": "b2.1-pol-11", "de": "die Reform", "ta": "சீர்திருத்தம்", "en": "reform", "ex": "Die Reform betrifft das Bildungssystem."}, {"id": "b2.1-pol-12", "de": "der Bürger", "ta": "குடிமகன்", "en": "citizen", "ex": "Jeder Bürger hat Pflichten."}, {"id": "b2.1-pol-13", "de": "protestieren", "ta": "எதிர்ப்பு தெரிவிக்க", "en": "to protest", "ex": "Die Menschen protestieren gegen das Gesetz."}, {"id": "b2.1-pol-14", "de": "die Menschenrechte", "ta": "மனித உரிமைகள்", "en": "human rights", "ex": "Menschenrechte müssen respektiert werden."}, {"id": "b2.1-pol-15", "de": "die Gesellschaft", "ta": "சமூகம்", "en": "society", "ex": "Die Gesellschaft verändert sich ständig."}]}}}, "B2.2": {"label": "Opinions & Media", "topics": {"abstract_opinions": {"label": "Vocabulary: Abstract Opinions & Debate", "items": [{"id": "b2.2-op-1", "de": "der Standpunkt", "ta": "நிலைப்பாடு", "en": "point of view/standpoint", "ex": "Ich verstehe deinen Standpunkt."}, {"id": "b2.2-op-2", "de": "das Argument", "ta": "வாதம்", "en": "argument", "ex": "Das ist ein starkes Argument."}, {"id": "b2.2-op-3", "de": "die Debatte", "ta": "விவாதம்", "en": "debate", "ex": "Die Debatte war sehr hitzig."}, {"id": "b2.2-op-4", "de": "widersprechen", "ta": "எதிர்க்க", "en": "to contradict", "ex": "Ich widerspreche deiner Meinung."}, {"id": "b2.2-op-5", "de": "zustimmen", "ta": "ஒப்புக்கொள்ள", "en": "to agree", "ex": "Ich stimme dir zu."}, {"id": "b2.2-op-6", "de": "der Vorteil", "ta": "நன்மை", "en": "advantage", "ex": "Das hat viele Vorteile."}, {"id": "b2.2-op-7", "de": "der Nachteil", "ta": "தீமை", "en": "disadvantage", "ex": "Es gibt auch Nachteile."}, {"id": "b2.2-op-8", "de": "die Perspektive", "ta": "பார்வை", "en": "perspective", "ex": "Das ist eine interessante Perspektive."}, {"id": "b2.2-op-9", "de": "objektiv", "ta": "நடுநிலையான", "en": "objective", "ex": "Bitte bleib objektiv."}, {"id": "b2.2-op-10", "de": "subjektiv", "ta": "அகநிலையான", "en": "subjective", "ex": "Das ist eine subjektive Meinung."}, {"id": "b2.2-op-11", "de": "überzeugen", "ta": "சம்மதிக்க வைக்க", "en": "to convince", "ex": "Er hat mich überzeugt."}, {"id": "b2.2-op-12", "de": "die Kontroverse", "ta": "சர்ச்சை", "en": "controversy", "ex": "Das Thema ist eine Kontroverse."}, {"id": "b2.2-op-13", "de": "differenzieren", "ta": "வேறுபடுத்திப் பார்க்க", "en": "to differentiate", "ex": "Man muss hier differenzieren."}, {"id": "b2.2-op-14", "de": "die Konsequenz", "ta": "விளைவு", "en": "consequence", "ex": "Das hat ernste Konsequenzen."}, {"id": "b2.2-op-15", "de": "berücksichtigen", "ta": "கருத்தில் கொள்ள", "en": "to take into account", "ex": "Wir müssen alle Faktoren berücksichtigen."}]}, "media_literacy": {"label": "Vocabulary: Media Literacy & Critical Reading", "items": [{"id": "b2.2-lit-1", "de": "die Fehlinformation", "ta": "தவறான தகவல்", "en": "misinformation", "ex": "Fehlinformationen verbreiten sich schnell."}, {"id": "b2.2-lit-2", "de": "glaubwürdig", "ta": "நம்பகமான", "en": "credible", "ex": "Ist diese Quelle glaubwürdig?"}, {"id": "b2.2-lit-3", "de": "hinterfragen", "ta": "கேள்வி எழுப்ப", "en": "to question/scrutinize", "ex": "Man sollte alles hinterfragen."}, {"id": "b2.2-lit-4", "de": "die Voreingenommenheit", "ta": "சார்பு நிலை", "en": "bias", "ex": "Jeder Mensch hat gewisse Voreingenommenheiten."}, {"id": "b2.2-lit-5", "de": "die Manipulation", "ta": "கையாளுதல்", "en": "manipulation", "ex": "Das ist reine Manipulation."}, {"id": "b2.2-lit-6", "de": "die Tatsache", "ta": "உண்மை", "en": "fact", "ex": "Das ist eine wissenschaftliche Tatsache."}, {"id": "b2.2-lit-7", "de": "die Behauptung", "ta": "கூற்று", "en": "claim/assertion", "ex": "Diese Behauptung ist nicht bewiesen."}, {"id": "b2.2-lit-8", "de": "überprüfen", "ta": "சரிபார்க்க", "en": "to verify/check", "ex": "Ich überprüfe die Fakten."}, {"id": "b2.2-lit-9", "de": "der Kontext", "ta": "சூழல்", "en": "context", "ex": "Man muss den Kontext verstehen."}, {"id": "b2.2-lit-10", "de": "die Interpretation", "ta": "விளக்கம்", "en": "interpretation", "ex": "Es gibt verschiedene Interpretationen."}, {"id": "b2.2-lit-11", "de": "kritisch denken", "ta": "விமர்சன ரீதியாக சிந்திக்க", "en": "to think critically", "ex": "Wir sollten kritisch denken."}, {"id": "b2.2-lit-12", "de": "die Propaganda", "ta": "பிரச்சாரம்", "en": "propaganda", "ex": "Das war reine Propaganda."}, {"id": "b2.2-lit-13", "de": "die Perspektivenvielfalt", "ta": "பல்வேறு பார்வைகள்", "en": "diversity of perspectives", "ex": "Perspektivenvielfalt bereichert die Diskussion."}, {"id": "b2.2-lit-14", "de": "die Verzerrung", "ta": "திரிபு", "en": "distortion", "ex": "Diese Darstellung ist eine Verzerrung."}, {"id": "b2.2-lit-15", "de": "einordnen", "ta": "வகைப்படுத்த", "en": "to classify/put into context", "ex": "Man muss die Information richtig einordnen."}]}}}};
+
+const LEVEL_ORDER = ["A1.1","A1.2","A2.1","A2.2","B1.1","B1.2","B2.1","B2.2"];
+
+/* words used in the hero split-flap cycler */
+const FEATURED = [
+  {de:"Hallo", ta:"வணக்கம்", en:"hello"},
+  {de:"Familie", ta:"குடும்பம்", en:"family"},
+  {de:"lernen", ta:"கற்க", en:"to learn"},
+  {de:"Zukunft", ta:"எதிர்காலம்", en:"future"},
+  {de:"Freundschaft", ta:"நட்பு", en:"friendship"},
+];
+
+/* ============ STATE ============ */
+let state = { screen:"landing", level:null, topicKey:null, qIndex:0, score:0, options:[], locked:false, streak:0 };
+
+function totalWords(){
+  let n=0;
+  for(const lvl of LEVEL_ORDER){
+    for(const tk in DATA[lvl].topics) n += DATA[lvl].topics[tk].items.length;
+  }
+  return n;
+}
+
+/* ============ STORAGE ============ */
+function loadProgress(){
+  try{ return JSON.parse(localStorage.getItem("td_progress")||"{}"); }catch(e){ return {}; }
+}
+function saveProgress(p){ localStorage.setItem("td_progress", JSON.stringify(p)); }
+function loadStreak(){
+  try{ return JSON.parse(localStorage.getItem("td_streak")||'{"count":0,"last":null}'); }catch(e){ return {count:0,last:null}; }
+}
+function bumpStreak(){
+  const s = loadStreak();
+  const today = new Date().toDateString();
+  if(s.last === today) return s.count;
+  const yesterday = new Date(Date.now()-86400000).toDateString();
+  s.count = (s.last === yesterday) ? s.count+1 : 1;
+  s.last = today;
+  localStorage.setItem("td_streak", JSON.stringify(s));
+  return s.count;
+}
+
+/* ============ RENDER ROOT ============ */
+function render(){
+  const app = document.getElementById("app");
+  if(state.screen==="landing") app.innerHTML = renderLanding();
+  else if(state.screen==="levels") app.innerHTML = renderLevels();
+  else if(state.screen==="topics") app.innerHTML = renderTopics();
+  else if(state.screen==="practice") app.innerHTML = renderPractice();
+  else if(state.screen==="summary") app.innerHTML = renderSummary();
+  attachHandlers();
+  if(state.screen==="landing") startFlap();
+}
+
+/* ============ LANDING ============ */
+function renderLanding(){
+  const words = totalWords();
+  return `
+  <section class="hero">
+    <div class="eyebrow">Free · No signup needed</div>
+    <h1>Learn <span class="accent">German</span><br/>the way your Tamil<br/>brain already thinks.</h1>
+    <div class="flapboard" id="flapboard">
+      <div class="flap-col"><div class="flap-lang">Deutsch</div><div class="flap-word" id="flap-de">Hallo</div></div>
+      <div class="flap-div"></div>
+      <div class="flap-col"><div class="flap-lang">தமிழ்</div><div class="flap-word ta" id="flap-ta">வணக்கம்</div></div>
+      <div class="flap-div"></div>
+      <div class="flap-col"><div class="flap-lang">English</div><div class="flap-word" id="flap-en">hello</div></div>
+    </div>
+    <p class="hero-sub">No English detour. Every word explained straight from Tamil to German — with pictures, quizzes, and a little bit of fun.</p>
+    <div class="cta-row">
+      <button class="btn btn-primary" data-nav="levels">Start learning →</button>
+      <a class="btn btn-ghost" href="https://t.me/ThamizhilDeutschBot" target="_blank">Try the Telegram bot</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>${words}+</b><span>words</span></div>
+      <div class="stat"><b>8</b><span>levels · A1 to B2</span></div>
+      <div class="stat"><b>0€</b><span>to start</span></div>
+    </div>
+  </section>
+  <footer>தமிழில் Deutsch · Built by Shilpa Vellore Krishnamurthy</footer>
+  `;
+}
+
+let flapTimer=null;
+function startFlap(){
+  if(flapTimer) clearInterval(flapTimer);
+  let i=0;
+  const deEl=document.getElementById("flap-de"), taEl=document.getElementById("flap-ta"), enEl=document.getElementById("flap-en");
+  if(!deEl) return;
+  flapTimer = setInterval(()=>{
+    i=(i+1)%FEATURED.length;
+    [deEl,taEl,enEl].forEach(el=>el.classList.add("flap-fade"));
+    setTimeout(()=>{
+      deEl.textContent = FEATURED[i].de;
+      taEl.textContent = FEATURED[i].ta;
+      enEl.textContent = FEATURED[i].en;
+      [deEl,taEl,enEl].forEach(el=>el.classList.remove("flap-fade"));
+    },250);
+  },2400);
+}
+
+/* ============ LEVELS ============ */
+function renderLevels(){
+  const progress = loadProgress();
+  const rows = LEVEL_ORDER.map(lvl=>{
+    const topics = DATA[lvl].topics;
+    const topicCount = Object.keys(topics).length;
+    const wordCount = Object.values(topics).reduce((a,t)=>a+t.items.length,0);
+    const done = progress[lvl] ? Object.keys(progress[lvl]).length : 0;
+    return `
+    <button class="level-card" data-level="${lvl}">
+      <div class="level-code">${lvl}</div>
+      <div class="level-info">
+        <h3>${DATA[lvl].label}</h3>
+        <span>${topicCount} topics · ${wordCount} words</span>
+      </div>
+      <div class="level-progress">${done}/${topicCount} done</div>
+    </button>`;
+  }).join("");
+  return `
+  <button class="back-btn" data-nav="landing">← Home</button>
+  <div class="section-head"><h2>Pick your level</h2><p>Climb from your first "Hallo" to real debates.</p></div>
+  <div class="staircase">${rows}</div>
+  `;
+}
+
+/* ============ TOPICS ============ */
+function renderTopics(){
+  const lvl = state.level;
+  const topics = DATA[lvl].topics;
+  const progress = loadProgress();
+  const cards = Object.keys(topics).map(tk=>{
+    const t = topics[tk];
+    const best = progress[lvl] && progress[lvl][tk] ? progress[lvl][tk] : null;
+    return `
+    <button class="topic-card" data-topic="${tk}">
+      <h3>${t.label.replace(/^Vocabulary: /,"")}</h3>
+      <span>${t.items.length} words${best? " · best "+best+"%":""}</span>
+    </button>`;
+  }).join("");
+  return `
+  <button class="back-btn" data-nav="levels">← Levels</button>
+  <div class="section-head"><h2>${lvl} — ${DATA[lvl].label}</h2><p>Choose a topic to practice.</p></div>
+  <div class="topic-grid">${cards}</div>
+  `;
+}
+
+/* ============ PRACTICE ============ */
+function buildQuestion(){
+  const topic = DATA[state.level].topics[state.topicKey];
+  const items = topic.items;
+  const correct = items[state.qIndex];
+  let pool = items.filter(it=>it.id!==correct.id).slice();
+  pool.sort(()=>Math.random()-0.5);
+  const distractors = pool.slice(0,3);
+  const options = [correct,...distractors].sort(()=>Math.random()-0.5);
+  state.options = options;
+  state.locked = false;
+}
+
+function renderPractice(){
+  const topic = DATA[state.level].topics[state.topicKey];
+  const items = topic.items;
+  if(state.qIndex===0 && state.options.length===0) buildQuestion();
+  const current = items[state.qIndex];
+  const pct = Math.round((state.qIndex)/items.length*100);
+  const streak = loadStreak().count;
+
+  const optsHtml = state.options.map(opt=>{
+    return `<button class="opt-btn" data-optid="${opt.id}">${opt.de}</button>`;
+  }).join("");
+
+  return `
+  <button class="back-btn" data-nav="topics">← Exit topic</button>
+  <div class="practice-header">
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="streak-pill">🔥 ${streak}</div>
+  </div>
+  <div id="feedback" class="feedback-banner"></div>
+  <div class="flashcard">
+    <div class="card-tag">${topic.label}</div>
+    <div class="card-ta ta">${current.ta}</div>
+    <div class="card-en">${current.en||""}</div>
+    <div class="prompt-line">Which German word matches this?</div>
+  </div>
+  <div class="options-grid">${optsHtml}</div>
+  <div class="next-row" id="nextRow"></div>
+  `;
+}
+
+/* ============ SUMMARY ============ */
+function renderSummary(){
+  const topic = DATA[state.level].topics[state.topicKey];
+  const total = topic.items.length;
+  const pct = Math.round((state.score/total)*100);
+  const emoji = pct>=80 ? "🎉" : pct>=50 ? "🌟" : "💪";
+  const msg = pct>=80 ? "Super da! Excellent work." : pct>=50 ? "Nalla progress! Keep going." : "Konjo practice pannunga — you'll get there.";
+
+  const progress = loadProgress();
+  if(!progress[state.level]) progress[state.level] = {};
+  const prevBest = progress[state.level][state.topicKey] || 0;
+  progress[state.level][state.topicKey] = Math.max(prevBest, pct);
+  saveProgress(progress);
+
+  return `
+  <div class="flashcard summary-card">
+    <div class="summary-emoji">${emoji}</div>
+    <h2>${msg}</h2>
+    <div class="summary-score mono">${state.score} / ${total} correct — ${pct}%</div>
+    <div class="cta-row">
+      <button class="btn btn-primary" data-action="retry">Try again</button>
+      <button class="btn btn-ghost" data-nav="topics">Other topics</button>
+    </div>
+  </div>
+  `;
+}
+
+/* ============ CONFETTI ============ */
+function burstConfetti(){
+  const colors=["#E4A83B","#C1453F","#2E9B82","#7B8AE8"];
+  const supportsAnimate = typeof Element!=="undefined" && typeof Element.prototype.animate==="function";
+  for(let i=0;i<24;i++){
+    const d=document.createElement("div");
+    d.className="confetti";
+    d.style.left = (45+Math.random()*10)+"vw";
+    d.style.background = colors[Math.floor(Math.random()*colors.length)];
+    d.style.transform = `rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(d);
+    const dx=(Math.random()-0.5)*300, dur=700+Math.random()*500;
+    if(supportsAnimate){
+      try{
+        d.animate([
+          {transform:`translate(0,0) rotate(0deg)`, opacity:1},
+          {transform:`translate(${dx}px, 70vh) rotate(720deg)`, opacity:0}
+        ],{duration:dur, easing:"cubic-bezier(.2,.6,.3,1)"});
+      }catch(e){ /* animation unsupported in this environment, confetti just won't move */ }
+    }else{
+      /* fallback: simple CSS transition instead of the Web Animations API */
+      d.style.transition = `transform ${dur}ms cubic-bezier(.2,.6,.3,1), opacity ${dur}ms ease`;
+      requestAnimationFrame(()=>{
+        d.style.transform = `translate(${dx}px, 70vh) rotate(720deg)`;
+        d.style.opacity = "0";
+      });
+    }
+    setTimeout(()=>d.remove(), dur+50);
+  }
+}
+
+/* ============ EVENTS ============ */
+function attachHandlers(){
+  document.querySelectorAll("[data-nav]").forEach(el=>{
+    el.onclick = ()=>{
+      const nav = el.getAttribute("data-nav");
+      if(nav==="topics") state.screen="topics";
+      else if(nav==="levels"){ state.screen="levels"; }
+      else if(nav==="landing"){ state.screen="landing"; }
+      render();
+    };
+  });
+  document.querySelectorAll("[data-level]").forEach(el=>{
+    el.onclick = ()=>{ state.level=el.getAttribute("data-level"); state.screen="topics"; render(); };
+  });
+  document.querySelectorAll("[data-topic]").forEach(el=>{
+    el.onclick = ()=>{
+      state.topicKey = el.getAttribute("data-topic");
+      state.qIndex=0; state.score=0; state.options=[];
+      state.screen="practice"; render();
+    };
+  });
+  document.querySelectorAll("[data-optid]").forEach(el=>{
+    el.onclick = ()=>handleAnswer(el);
+  });
+  const retryBtn = document.querySelector('[data-action="retry"]');
+  if(retryBtn) retryBtn.onclick = ()=>{ state.qIndex=0; state.score=0; state.options=[]; state.screen="practice"; render(); };
+}
+
+function handleAnswer(btnEl){
+  if(state.locked) return;
+  state.locked = true;
+  const topic = DATA[state.level].topics[state.topicKey];
+  const items = topic.items;
+  const current = items[state.qIndex];
+  const chosenId = btnEl.getAttribute("data-optid");
+  const isCorrect = chosenId === current.id;
+  const feedback = document.getElementById("feedback");
+
+  document.querySelectorAll(".opt-btn").forEach(b=>{
+    b.disabled = true;
+    if(b.getAttribute("data-optid")===current.id) b.classList.add("correct");
+    if(b===btnEl && !isCorrect) b.classList.add("wrong");
+  });
+
+  if(isCorrect){
+    state.score++;
+    bumpStreak();
+    feedback.textContent = "🟩 Correct-u! Super da";
+    feedback.className = "feedback-banner correct show";
+    burstConfetti();
+  }else{
+    feedback.textContent = `🟥 Wrong-u. Correct word: ${current.de}`;
+    feedback.className = "feedback-banner wrong show";
+  }
+
+  const nextRow = document.getElementById("nextRow");
+  const isLast = state.qIndex >= items.length-1;
+  nextRow.innerHTML = `<button class="btn btn-primary" id="nextBtn">${isLast? "See results →" : "Next word →"}</button>`;
+  document.getElementById("nextBtn").onclick = ()=>{
+    if(isLast){ state.screen="summary"; }
+    else{ state.qIndex++; state.options=[]; buildQuestion(); state.screen="practice"; }
+    render();
+  };
+}
+
+render();
+</script>
+</body>
+</html>
